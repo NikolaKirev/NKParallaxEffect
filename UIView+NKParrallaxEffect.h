@@ -1,20 +1,21 @@
-NKParallaxEffect
-================
+//
+//  UIView+NKParrallaxEffect.h
+//  ToDay
+//
+//  Created by Nikola Kirev on 9/23/13.
+//  Copyright (c) 2013 Nikola Kirev. All rights reserved.
+//
 
-UIView category, that makes adding iOS7 Parallax Motion Effects fast and easy.
+#import <UIKit/UIKit.h>
 
-##Usage##
+typedef NS_ENUM(NSUInteger, NKParallaxType){
+    NKParallaxTypeHorizontalAxis,
+    NKParallaxTypeVerticalAxis,
+    NKParallaxTypeMultiAxis
+};
 
-1. Add `UIViewe+NKParallaxEffect.h` and `UIViewe+NKParallaxEffect.m` to your project.
-2. Import `UIViewe+NKParallaxEffect.h`:
+@interface UIView (NKParrallaxEffect)
 
-```obj-c
-#import "UIViewe+NKParallaxEffect.h"
-```
-
-##Methods##
-
-```obj-c
 /**
  NOTE: The term AMPLITUDE used bellow refers to "peak amplitede". This is the deviation from the center.
  For example, of the amplitude is 10, the view will move 10 points on both sides. Its whole amplitude (peak-to-peak amplitude) will be 20 points.
@@ -65,7 +66,5 @@ UIView category, that makes adding iOS7 Parallax Motion Effects fast and easy.
  Adds default parallax effect to your view. Has 10.0f amplitude on X and Y axis and is not inverted.
  */
 - (void)addParallaxToView;
-```
 
-##License##
-The code is licensed under the standard MIT license.
+@end
