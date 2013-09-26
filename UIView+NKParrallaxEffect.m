@@ -1,6 +1,5 @@
 //
 //  UIView+NKParrallaxEffect.m
-//  ToDay
 //
 //  Created by Nikola Kirev on 9/23/13.
 //  Copyright (c) 2013 Nikola Kirev. All rights reserved.
@@ -15,7 +14,7 @@
 
 #pragma mark - Private Helper Methods
 
-- (void)addInterpolatingParallaxWithType:(UIInterpolatingMotionEffectType)type amplitude:(CGFloat)amplitude {
+- (UIInterpolatingMotionEffect *)interpolatingParallaxWithType:(UIInterpolatingMotionEffectType)type amplitude:(CGFloat)amplitude {
     
     NSString *axisKeyPath;
     if (type == UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis) {
@@ -28,7 +27,8 @@
                                                                                                type:type];
     [axisMotion setMinimumRelativeValue:@(-amplitude)];
     [axisMotion setMaximumRelativeValue:@(amplitude)];
-    [self addMotionEffect:axisMotion];
+    
+    return axisMotion;
 }
 
 #pragma mark - Public Methods for Adding Parallax Effect
@@ -40,8 +40,12 @@
     CGFloat xAmplitude = inverted ? horizontalAmplitude*(-1.0f) : horizontalAmplitude;
     CGFloat yAmplitude = inverted ? verticalAmplitude*(-1.0f) : verticalAmplitude;
     
-    [self addInterpolatingParallaxWithType:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis amplitude:xAmplitude];
-    [self addInterpolatingParallaxWithType:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis amplitude:yAmplitude];
+    UIInterpolatingMotionEffect *xMotion = [self interpolatingParallaxWithType:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis amplitude:xAmplitude];
+    UIInterpolatingMotionEffect *yMotion = [self interpolatingParallaxWithType:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis amplitude:yAmplitude];
+    
+    UIMotionEffectGroup *motionGroup = [[UIMotionEffectGroup alloc] init];
+    motionGroup.motionEffects = @[xMotion, yMotion];
+    [self addMotionEffect:motionGroup];
 }
 
 - (void)addParallaxWithType:(NKParallaxType)parallaxType relativeAmplitude:(CGFloat)relativeAmplitude inverted:(BOOL)inverted {
@@ -53,12 +57,12 @@
     switch (parallaxType) {
         case NKParallaxTypeHorizontalAxis:{
             CGFloat xAmplitude = inverted ? relativeAmplitude*(-1.0f) : relativeAmplitude;
-            [self addInterpolatingParallaxWithType:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis amplitude:xAmplitude];
+            [self addMotionEffect:[self interpolatingParallaxWithType:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis amplitude:xAmplitude]];
         }
             break;
         case NKParallaxTypeVerticalAxis:{
             CGFloat yAmplitude = inverted ? relativeAmplitude*(-1.0f) : relativeAmplitude;
-            [self addInterpolatingParallaxWithType:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis amplitude:yAmplitude];
+            [self addMotionEffect:[self interpolatingParallaxWithType:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis amplitude:yAmplitude]];
         }
             break;
         case NKParallaxTypeMultiAxis:
